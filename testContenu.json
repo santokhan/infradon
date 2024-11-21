@@ -1,8 +1,8 @@
 {
-    "_id": "68ea9ab0d18118817b6aa40aa1000b87",
-    "_rev": "3-2dee7d47cc5670d032b253ee4ed491e3",
-    "post_name": "Post title",
-    "post_content": "Comment ça va",
+    "_id": "1",
+    "_rev": "1",
+    "test_name": "Test title",
+    "test_content": "Test de Français",
     "attributes": "today",
     "author": "main",
     "comments": [

@@ -1,6 +1,81 @@
+
 <script lang="ts">
-const dbName = 'http://admin:admin@localhost:5986/test';
-const db = new PouchDB(test);
+import {ref} from 'vue';
+import PouchDB from 'pouchdb';
+
+declare interface Post {
+  _id: string;
+  doc: {
+    test_name: string;
+    test_content: string;
+    attributes: {
+      creation_date: string;
+      author: string;
+    };
+  };
+}
+
+
+
+export default {
+  data(){
+    return {
+    total:0,
+    postData: [] as Post[],
+    document: null as Post | null,
+    storage: null as PouchDB.Database | null
+  };
+
+ 
+
+},
+/*
+mounted(){
+    this.initDatabase(){
+      const db new PouchDP('http://lolalhost:5984/')
+    if (db){
+      console.log("conecte")
+    }else{console.warn("Erreur")}
+    this.storage = db
+    }
+  },
+*/
+methods: {
+  
+  inc() {
+    this.total++;
+  },
+  initDatabase(){
+  },
+  fetchDatabase(){}
+}
+}
+
+
+
+</script>
+
+<template>
+    <h1>C'est une page pour générer des post</h1>
+    <p>ajouter un post: {{total}}</p>
+    <button type="button" role="button" @click="inc">+1</button>
+  
+</template>
+
+
+<style>
+@media (min-width: 1024px) {
+  .about {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+}
+</style>
+
+<script lang="ts">
+import { ref } from 'vue'
+import PouchDB from 'pouchdb'
 
 declare interface Post {
   _id: string
@@ -17,27 +92,30 @@ declare interface Post {
   }
 }
 export default {
-  data(){
+  data() {
     return {
-    total:0,
-    postsData: [] as Post[],
+      total: 0,
+      postsData: [] as Post[],
       document: null as Post | null,
       storage: null as PouchDB.Database | null
-  };
-},
+    }
+  },
 
-mounted() {
+  mounted() {
     this.initDatabase()
     this.fetchData()
   },
 
-methods: {
-  inc() {
-    //this.total++;
-  },
-  initDatabase(){ const db = new PouchDB('http://admin:admin@localhost:5986/LoicView')
+  methods: {
+    inc() {
+      // old
+      // this.total++;
+    },
+
+    initDatabase() {
+      const db = new PouchDB('http://admin:IloveNikeAirForce2..@localhost:5984/cours3')
       if (db) {
-        console.log("Connected to collection 'Loicview'")
+        console.log("Connected to collection 'cours3'")
       } else {
         console.warn('Something went wrong')
       }
@@ -45,15 +123,15 @@ methods: {
 
       // Start replication after initializing the database
       this.startReplication()
+    },
 
-  },
-  startReplication() {
+    startReplication() {
       //replicate synchronise vue avec pouchdb
-      const remoteDB = new PouchDB('http://admin:admin@localhost:5986/LoicView')
+      const remoteDB = new PouchDB('http://admin:IloveNikeAirForce2.@localhost:5984/cours3')
 
       // Set up continuous replication
       this.storage.replicate
-        .from('http://admin:admin@localhost:5986/LoicView', remoteDB, {
+        .from('http://admin:IloveNikeAirForce2.@localhost:5984/cours3', remoteDB, {
           live: true,
           retry: true
         })
@@ -65,8 +143,8 @@ methods: {
         })
     },
 
-     //met un document dans la db
-     putDocument(document: Post) {
+    //met un document dans la db
+    putDocument(document: Post) {
       const db = ref(this.storage).value
       if (db) {
         db.put(document)
@@ -78,13 +156,14 @@ methods: {
           })
       }
     },
- //Créer un document en dur qui retourne tjrs le même objet
- fakeData() {
+
+    //Créer un document en dur qui retourne tjrs le même objet
+    fakeData() {
       return {
         post: {
           title: 'New Fake document',
-          content: "congrats new doc add",
-          author: 'Loïc',
+          content: "Bravo t'as un nouveau doc",
+          author: 'Stella',
           comments_count: 3,
           comments: [
             {
@@ -109,6 +188,7 @@ methods: {
       this.storage?.post(this.fakeData())
       console.log('bravo tu as bien ajouté ton document')
     },
+
     fetchData() {
       const storage = ref(this.storage)
       const self = this
@@ -128,19 +208,15 @@ methods: {
             console.log('fetchData error', error)
           })
       }
-
+    }
   }
 }
-}
-
-
-
 </script>
 
 <template>
-    <h1>Nombre de post</h1>
-    <button @click="putFakeData()">add document</button>
-    <ul>
+  <h1>Nombre de post:</h1>
+  <button @click="putFakeData()">add document</button>
+  <ul>
     <li v-for="post in postsData" :key="post._id">
       <div class="ucfirst">
         {{ post.doc.title
@@ -151,8 +227,3 @@ methods: {
     </li>
   </ul>
 </template>
-
-
-
-
-
