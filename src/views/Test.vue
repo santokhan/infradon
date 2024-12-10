@@ -1,5 +1,5 @@
-ancien code
 <script lang="ts">
+
 import { ref } from 'vue';
 import PouchDB from 'pouchdb';
 
@@ -18,7 +18,7 @@ interface TestDocument {
 
 // Initialisation de la base de données CouchDB
 const dbName = 'http://admin:admin@localhost:5986/test';
-const db = new PouchDB(test);
+const db = new PouchDB('test');
 
 export default {
   setup() {

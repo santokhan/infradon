@@ -1,158 +1,113 @@
 <script lang="ts">
-const dbName = 'http://admin:admin@localhost:5986/test';
-const db = new PouchDB(test);
+import { ref } from 'vue';
+import PouchDB from 'pouchdb';
 
 declare interface Post {
-  _id: string
-  doc: {
-    title: string
-    content: string
-    author: string
-    comments_count: Int16Array
+  _id: string;
+  title: string;
+  content: string;
+  author: string;
+  comments_count: number;
+  comments: { comment: string; author: string }[];
+}
 
-    comments: {
-      comment: string
-      author: string
+export default {
+  data() {
+    return {
+      postsData: [] as Post[], // Stocke les posts récupérés depuis la DB
+      storage: null as PouchDB.Database | null, // Instance PouchDB
+    };
+  },
+
+  async mounted() {
+    await this.initDatabase(); // Attendez que la DB soit initialisée
+    await this.putFakeData(); // Attendez l'ajout des données
+    await this.fetchData();  // Récupérez les données après l'ajout
+  },
+
+  methods: {
+    // Initialise la base de données PouchDB
+    async initDatabase() {
+      try {
+        this.storage = new PouchDB('http://admin:admin@localhost:5986/LoicView');
+        console.log("Connexion réussie à la collection 'LoicView'");
+      } catch (error) {
+        console.error('Erreur lors de la connexion à la base de données:', error);
+      }
+    },
+
+    // Données fictives pour les tests
+    fakeData() {
+      return {
+        _id: 'unique-id-' + new Date().toISOString().replace(/[:.]/g, '-'),
+        title: 'New Fake Document',
+        content: 'This is a fake post content.',
+        author: 'Loïc',
+        comments_count: 3,
+        comments: [
+          { comment: 'Commentaire 1', author: 'Auteur 1' },
+          { comment: 'Commentaire 2', author: 'Auteur 2' },
+          { comment: 'Commentaire 3', author: 'Auteur 3' },
+        ],
+      };
+    },
+
+    // Ajoute un document fictif dans la DB
+    async putFakeData() {
+      if (!this.storage) {
+        console.error('Base de données non initialisée.');
+        return;
+      }
+      const data = this.fakeData();
+      try {
+        await this.storage.put(data);
+        console.log('Document ajouté avec succès :', data);
+      } catch (error) {
+        console.error('Erreur lors de l\'ajout du document:', error);
+      }
+    },
+
+    // Récupère tous les documents de la DB
+    async fetchData() {
+      if (!this.storage) {
+        console.error('Base de données non initialisée.');
+        return;
+      }
+      try {
+        const result = await this.storage.allDocs({ include_docs: true });
+        console.log('Données récupérées:', result);
+        // Assurez-vous que les données récupérées correspondent au format attendu
+        //this.postsData = result.rows.map((row) => row.doc).filter((doc) => !!doc) as Post[];
+      } catch (error) {
+        console.error('Erreur lors de la récupération des données:', error);
+      }
     }
   }
 }
-export default {
-  data(){
-    return {
-    total:0,
-    postsData: [] as Post[],
-      document: null as Post | null,
-      storage: null as PouchDB.Database | null
-  };
-},
 
-mounted() {
-    this.initDatabase()
-    this.fetchData()
-  },
-
-methods: {
-  inc() {
-    //this.total++;
-  },
-  initDatabase(){ const db = new PouchDB('http://admin:admin@localhost:5986/LoicView')
-      if (db) {
-        console.log("Connected to collection 'Loicview'")
-      } else {
-        console.warn('Something went wrong')
-      }
-      this.storage = db
-
-      // Start replication after initializing the database
-      this.startReplication()
-
-  },
-  startReplication() {
-      //replicate synchronise vue avec pouchdb
-      const remoteDB = new PouchDB('http://admin:admin@localhost:5986/LoicView')
-
-      // Set up continuous replication
-      this.storage.replicate
-        .from('http://admin:admin@localhost:5986/LoicView', remoteDB, {
-          live: true,
-          retry: true
-        })
-        .on('complete', (info) => {
-          console.log('Replication complete', info)
-        })
-        .on('error', (err) => {
-          console.error('Replication error', err)
-        })
-    },
-
-     //met un document dans la db
-     putDocument(document: Post) {
-      const db = ref(this.storage).value
-      if (db) {
-        db.put(document)
-          .then(() => {
-            console.log('Add ok')
-          })
-          .catch((error) => {
-            console.log('Add ko', error)
-          })
-      }
-    },
- //Créer un document en dur qui retourne tjrs le même objet
- fakeData() {
-      return {
-        post: {
-          title: 'New Fake document',
-          content: "congrats new doc add",
-          author: 'Loïc',
-          comments_count: 3,
-          comments: [
-            {
-              comment: 'Commentaire 1',
-              author: 'Auteur 1'
-            },
-            {
-              comment: 'Commentaire 2',
-              author: 'Auteur 2'
-            },
-            {
-              comment: 'Commentaire 3',
-              author: 'Auteur 3'
-            }
-          ]
-        }
-      }
-    },
-    //méthode qui permet de mettre mon doc fake data dans la db
-    putFakeData() {
-      //const db = ref(this.storage).value;
-      this.storage?.post(this.fakeData())
-      console.log('bravo tu as bien ajouté ton document')
-    },
-    fetchData() {
-      const storage = ref(this.storage)
-      const self = this
-      if (storage.value) {
-        storage.value
-          .allDocs({
-            include_docs: true,
-            attachments: true
-          })
-          .then(
-            function (result: any) {
-              console.log('fetchData success', result)
-              self.postsData = result.rows
-            }.bind(this)
-          )
-          .catch(function (error: any) {
-            console.log('fetchData error', error)
-          })
-      }
-
-  }
-}
-}
-
-
-
+   // },
+  //},
+//};
 </script>
 
 <template>
-    <h1>Nombre de post</h1>
-    <button @click="putFakeData()">add document</button>
+  <div>
+    <h1>Nombre de posts : {{ postsData.length }}</h1>
+    <button @click="putFakeData">Ajouter un document</button>
     <ul>
-    <li v-for="post in postsData" :key="post._id">
-      <div class="ucfirst">
-        {{ post.doc.title
-        }}<em style="font-size: x-small" v-if="post.doc.comments?.comment">
-          - {{ post.doc.comments?.comment }}
-        </em>
-      </div>
-    </li>
-  </ul>
+      <li v-for="post in postsData" :key="post._id">
+        <div>
+          <strong>{{ post.title }}</strong>
+          <p>{{ post.content }}</p>
+          <em>Author: {{ post.author }}</em>
+          <ul>
+            <li v-for="(comment, index) in post.comments" :key="index">
+              {{ comment.comment }} - <em>{{ comment.author }}</em>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+    <p v-if="postsData.length === 0">Aucun post disponible</p>
+  </div>
 </template>
-
-
-
-
-

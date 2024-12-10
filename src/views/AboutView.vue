@@ -1,6 +1,6 @@
 <script lang="ts">
 
-import PouchDB from 'Pouchdb'
+import PouchDB from 'pouchdb'
 declare interface post {
   _id: string,
   doc: {
@@ -17,7 +17,7 @@ export default {
     return {
 
       datas: [],
-      db: null as PouchDB.databaseReference<{}> | null,
+      db: null, //as PouchDB.databaseReference<{}> | null,
       databaseReference: null,
 
     };
@@ -40,8 +40,8 @@ export default {
         }
 
         try {
-          const response = await this.db.put(newPost);
-          console.log('Document ajouté avevc succès', response);
+          //const response = await this.db.put(newPost);
+          //console.log('Document ajouté avevc succès', response);
 
         } catch (error) { console.error('erreur lors de lajout du document', error) }
       }
