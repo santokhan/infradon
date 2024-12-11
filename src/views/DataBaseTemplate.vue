@@ -24,6 +24,6 @@ export default {
     <DatabaseManager :remoteURL="'http://admin:Recopy2-Broadways2-Daylong9-Acts0@localhost:5984/newdb'"
     :localURL="'newdb'" />
     -->
-    <DatabaseManager :remoteURL="'http://admin:admin@localhost:5984/newdb'" :localURL="'newdb'" />
+    <DatabaseManager :remoteURL="'http://admin:admin@localhost:5986/newdb'" :localURL="'newdb'" />
   </div>
 </template>

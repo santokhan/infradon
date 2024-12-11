@@ -12,7 +12,7 @@ const router = createRouter({
    
     
     {
-      path: '/loicView',
+      path: '/LoicView',
       name: 'loicView',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
@@ -20,15 +20,7 @@ const router = createRouter({
       component: () => import('../views/LoicView.vue')
 
     },
-    {
-      path: '/loicViewcopy',
-      name: 'loicViewcopy',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/LoicViewcopy.vue')
-
-    },
+    
     {
       path: '/loictest',
       name: 'loictest',
@@ -40,10 +32,10 @@ const router = createRouter({
     },
 
     {
-      path: '/database',
-      name: 'database',
+      path: '/dataBaseTemplate',
+      name: 'dataBaseTemplate',
       component: () => import('../views/DataBaseTemplate.vue')
-    }
+    },
 
   ]
 })
