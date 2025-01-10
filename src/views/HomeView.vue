@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import SidebarComponent from '@/components/ui/sidebar/SidebarComponent.vue';
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="flex">
+    <SidebarComponent />
+    <div class="p-4"></div>
+  </div>
 </template>

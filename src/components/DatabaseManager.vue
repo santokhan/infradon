@@ -21,7 +21,7 @@ export default defineComponent({
     }
   },
 
-  data() {
+  data() { 
     return {
       documents: [] as DatabaseDocument[],
       newDocument: {
