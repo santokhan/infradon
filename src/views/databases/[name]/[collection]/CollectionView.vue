@@ -11,6 +11,7 @@ import SearchForm from '@/components/ui/colllection/topbar/SearchForm.vue';
 import ActionEdit from '@/components/shared/ActionEdit.vue';
 import ActionDelete from '@/components/shared/ActionDelete.vue';
 import TableName from '@/components/ui/colllection/TableName.vue';
+import EditDocument from '@/components/forms/EditDocument.vue';
 
 const route = useRoute();
 const collection = ref<string>("")
@@ -20,7 +21,7 @@ async function assignDocuments() {
   if (!collection.value) return
 
   try {
-    const db = new PouchDb(collection.value || 'mydb')
+    const db = new PouchDb(collection.value)
 
     const result = await db.allDocs({ include_docs: true })
 
@@ -48,16 +49,17 @@ watch(() => route.params, async () => {
 })
 
 const isAdding = ref(false)
+const collectionToEdit = ref<Record<string, any> | null>(null)
 
 async function removeDocument(doc: Record<string, any>) {
   const status = window.confirm("Are you sure you want to delete this document?");
   if (!status) return;
 
-  const db = new PouchDb('mydb');
+  const db = new PouchDb(collection.value);
 
   try {
-    if (doc && doc._id && doc._rev) {
-      await db.remove(doc._id, doc._rev);
+    if (doc._id) {
+      await db.remove({ _id: doc._id, _rev: doc._rev });
       console.log('Document deleted successfully');
     } else {
       console.error('Document ID or revision not found');
@@ -75,21 +77,31 @@ async function removeDocument(doc: Record<string, any>) {
     <SearchForm />
     <div class="grow"></div>
     <button type="button" v-if="!isAdding" class="primary" @click="isAdding = !isAdding">Add Document</button>
-    <button type="button" v-else class="primary" @click="isAdding = !isAdding">Close Form</button>
+    <button type="button" v-else class="primary" @click="() => {
+      collectionToEdit = null
+      isAdding = !isAdding
+    }">Close Form</button>
   </div>
 
-  <AddDocument v-if="isAdding" :collection_name="collection" @close="async () => {
-    try {
-      const result = await assignDocuments()
+  <template v-if="isAdding">
+    <template v-if="collectionToEdit">
+      <EditDocument :doc="collectionToEdit" @close="collectionToEdit = null" />
+    </template>
+    <template v-else>
+      <AddDocument :collection_name="collection" @close="async () => {
+        try {
+          const result = await assignDocuments()
 
-      if (!result) return
+          if (!result) return
 
-      isAdding = false
+          isAdding = false
 
-    } catch (error) {
-      console.log(error)
-    }
-  }" />
+        } catch (error) {
+          console.log(error)
+        }
+      }" />
+    </template>
+  </template>
 
   <div class="mt-4">
     <div class="flex">
@@ -121,6 +133,8 @@ async function removeDocument(doc: Record<string, any>) {
           <td>
             <div class="flex gap-2 items-center">
               <ActionEdit class="text-blue-500 hover:text-blue-600 mr-2" @click="async () => {
+                collectionToEdit = item.doc;
+                isAdding = true
               }" />
               <ActionDelete class="text-red-500 hover:text-red-600" @click="async () => {
                 removeDocument(item.doc)

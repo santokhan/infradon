@@ -2,6 +2,8 @@
 // @ts-nocheck
 import { ref } from 'vue';
 import PouchDB from 'pouchdb-browser';
+import blobToUrl from '@/utils/blob-to-url';
+import toBlob from '@/utils/to-blob';
 
 const props = defineProps({
   doc: {
@@ -16,18 +18,18 @@ const emit = defineEmits(['close'])
 
 const doSubmit = async (e) => {
   e.preventDefault();
+  if(!props.doc._id) return
+  
   try {
-    const db = new PouchDB('mydb')
+    const db = new PouchDB()
+    const existingDoc = await db.get(props.doc._id);
 
-    const newDoc = {
-      _id: crypto.randomUUID(),
-      name: name.value,
-      content: content.value,
-      image: image.value,
-    };
+    existingDoc.name= name.value
+    existingDoc.content= content.value
+    existingDoc.image= image.value
 
-    await db.put(newDoc);
-    console.log('Document saved', newDoc);
+    await db.put(existingDoc);
+    console.log('Document updated', existingDoc);
 
     // Reset form fields
     name.value = '';
@@ -36,7 +38,7 @@ const doSubmit = async (e) => {
 
     emit('close');
   } catch (error) {
-    console.error('Error saving document:', error);
+    console.error('Error updating document:', error);
   }
 };
 
@@ -88,13 +90,15 @@ const handleImageChange = (event: Event) => {
       <template v-if="image">
         <div class="flex flex-col gap-1">
           <label for="image">Preview:</label>
-          <img v-if="image" :src="URL.createObjectURL(image)" alt="Preview" />
+          <img v-if="image" :src="blobToUrl({ image: toBlob({ file: image }) })" alt="Preview"
+          class="size-20 aspect-square object-cover rounded-xl border"  />
         </div>
       </template>
       <template v-else>
         <div class="flex flex-col gap-1">
           <label for="image">Preview:</label>
-          <img v-if="doc.image" :src="doc.image" alt="Preview" />
+          <img v-if="doc.image" :src="blobToUrl({image:doc?.image})" alt="Preview"
+          class="size-20 aspect-square object-cover rounded-xl border"  />
         </div>
       </template>
 
