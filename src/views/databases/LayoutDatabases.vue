@@ -5,7 +5,7 @@ import SidebarComponent from '@/components/ui/sidebar/SidebarComponent.vue';
 <template>
   <div class="flex divide-x">
     <SidebarComponent />
-    <div class="p-4">
+    <div class="p-4 grow">
       <RouterView />
     </div>
   </div>

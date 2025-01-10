@@ -35,7 +35,6 @@ function assignCollection() {
   collection.value = Array.isArray(coll) ? coll[0] : coll
 }
 watchEffect(assignCollection)
-watchEffect(() => { console.log(window.location) })
 watch(() => route.params, assignCollection)
 </script>
 
