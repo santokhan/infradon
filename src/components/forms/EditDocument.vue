@@ -6,6 +6,10 @@ import blobToUrl from '@/utils/blob-to-url';
 import toBlob from '@/utils/to-blob';
 
 const props = defineProps({
+  collection_name: {
+    type: String,
+    required: true
+  },
   doc: {
     type: Object,
     required: true
@@ -18,10 +22,10 @@ const emit = defineEmits(['close'])
 
 const doSubmit = async (e) => {
   e.preventDefault();
-  if(!props.doc._id) return
-  
+  if(!props.doc?._id) return
+
   try {
-    const db = new PouchDB()
+    const db = new PouchDB(props.collection_name)
     const existingDoc = await db.get(props.doc._id);
 
     existingDoc.name= name.value

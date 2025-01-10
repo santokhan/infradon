@@ -85,7 +85,7 @@ async function removeDocument(doc: Record<string, any>) {
 
   <template v-if="isAdding">
     <template v-if="collectionToEdit">
-      <EditDocument :doc="collectionToEdit" @close="collectionToEdit = null" />
+      <EditDocument :doc="collectionToEdit" @close="collectionToEdit = null" :collection_name="collection" />
     </template>
     <template v-else>
       <AddDocument :collection_name="collection" @close="async () => {
