@@ -3,5 +3,31 @@
 @tailwind utilities;
 
 @layer base {
+  label {
+    @apply font-medium;
+  }
 
+  input.default {
+    @apply px-3 py-1.5 rounded-lg border block;
+  }
+
+  textarea.default {
+    @apply px-3 py-1.5 rounded-lg border block;
+  }
+
+  select.default {
+    @apply px-3 py-1.5 rounded-lg border block;
+  }
+
+  button.primary {
+    @apply bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg font-medium;
+  }
+
+  table.default th {
+    @apply px-4 py-2 text-left text-sm font-medium text-gray-600;
+  }
+
+  table.default td {
+    @apply px-4 py-2 text-sm text-gray-700;
+  }
 }

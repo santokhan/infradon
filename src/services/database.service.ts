@@ -1,6 +1,6 @@
 // src/services/database.service.ts
 
-import PouchDB from 'pouchdb'
+import PouchDB from 'pouchdb-browser'
 import type { DatabaseDocument, DatabaseResponse, DatabaseError } from '../types/database.types'
 
 class DatabaseService {
@@ -8,7 +8,7 @@ class DatabaseService {
   private readonly remoteURL: string
   private readonly localURL: string
 
-  constructor(remoteURL: string, localURL: string) {
+  constructor(remoteURL: string, localURL: string = "newdb") {
     // URL passé en paramètre
     this.remoteURL = remoteURL
     this.localURL = localURL
@@ -29,63 +29,30 @@ class DatabaseService {
     console.log('Call 2')
 
     const db = this.db
-
-    if (!db) {
-      throw new Error('Database not initialized')
-    }
-
-    /*
-  try {
-    // Réplication depuis le serveur distant vers la base locale
-    const replication = db.replicate.from(this.remoteURL) // this.dbUrl est l'URL de la base distante
-    // Ajouter des gestionnaires d'événements pour suivre l'état de la réplication
-    replication.on('complete', function () {
-      console.log('Réplication terminée avec succès !')
-    })
-
-    replication.on('error', function (err: any) {
-      console.error('Erreur lors de la réplication', err)
-    })
-  } catch (error) {
-    console.error('Erreur lors de la réplication depuis le serveur distant', error)
-  }
-    */
-
-    // ICI il faut bien attendre la fin du replicate avec un await
-    await db.replicate
-      .from(this.remoteURL)
-      .then(() => {
-        console.log('Réplication terminée avec succès !')
-      })
-      .catch((err) => {
-        console.error('Erreur lors de la réplication', err)
-      })
-
-  }
-
-  //fonction replicate depuis le serveur distante la base de donné to distant from local
-
-  async replicateToRemote() {
-    const db = this.db
-
     if (!db) {
       throw new Error('Database not initialized')
     }
 
     try {
-      // Réplication depuis la base locale vers le serveur distant
-      const replication = db.replicate.to(this.remoteURL) // this.dbUrl est l'URL de la base distante
+      await db.replicate.from(this.remoteURL)
+      console.log('Réplication terminée avec succès !')
+    } catch (err) {
+      console.error('Erreur lors de la réplication', err)
+    }
+  }
 
-      // Ajouter des gestionnaires d'événements pour suivre l'état de la réplication
-      replication.on('complete', function () {
-        console.log('Réplication terminée avec succès vers le serveur distant !')
-      })
-
-      replication.on('error', function (err: any) {
-        console.error('Erreur lors de la réplication vers le serveur distant', err)
-      })
-    } catch (error) {
-      console.error('Erreur lors de la réplication vers le serveur distant', error)
+  //fonction replicate depuis le serveur distante la base de donné to distant from local
+  async replicateToRemote() {
+    const db = this.db
+    if (!db) {
+      throw new Error('Database not initialized')
+    }
+  
+    try {
+      await db.replicate.to(this.remoteURL)
+      console.log('Réplication terminée avec succès vers le serveur distant !')
+    } catch (err) {
+      console.error('Erreur lors de la réplication vers le serveur distant', err)
     }
   }
 
@@ -212,6 +179,4 @@ class DatabaseService {
   }
 }
 
-export function createDatabaseService(remoteURL: string, localURL: string) {
-  return new DatabaseService(remoteURL, localURL)
-}
+export { DatabaseService }

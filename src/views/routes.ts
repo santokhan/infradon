@@ -11,11 +11,6 @@ export default [
         component: () => import('./HomeView.vue'),
       },
       routes_databases,
-      {
-        path: 'dataBaseTemplate',
-        name: 'dataBaseTemplate',
-        component: () => import('../views/DataBaseTemplate.vue')
-      },
     ]
   },
 ]
