@@ -10,16 +10,17 @@ import StatusFilter from '@/components/ui/colllection/topbar/StatusFilter.vue';
 import SearchForm from '@/components/ui/colllection/topbar/SearchForm.vue';
 import ActionEdit from '@/components/shared/ActionEdit.vue';
 import ActionDelete from '@/components/shared/ActionDelete.vue';
+import TableName from '@/components/ui/colllection/TableName.vue';
 
 const route = useRoute();
-const collection = ref()
+const collection = ref<string>("")
 const documents = ref<any>({});
 
 async function assignDocuments() {
   if (!collection.value) return
 
   try {
-    const db = new PouchDb('mydb')
+    const db = new PouchDb(collection.value || 'mydb')
 
     const result = await db.allDocs({ include_docs: true })
 
@@ -77,7 +78,7 @@ async function removeDocument(doc: Record<string, any>) {
     <button type="button" v-else class="primary" @click="isAdding = !isAdding">Close Form</button>
   </div>
 
-  <AddDocument v-if="isAdding" @close="async () => {
+  <AddDocument v-if="isAdding" :collection_name="collection" @close="async () => {
     try {
       const result = await assignDocuments()
 
@@ -92,9 +93,7 @@ async function removeDocument(doc: Record<string, any>) {
 
   <div class="mt-4">
     <div class="flex">
-      <div class="bg-white rounded-t-lg px-3 py-1">
-        <span class="font-semibold text-lg">{{ collection }}</span>
-      </div>
+      <TableName />
     </div>
 
     <table v-if="documents" class="default min-w-full table-auto bg-white rounded-lg">

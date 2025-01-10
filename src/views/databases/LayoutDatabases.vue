@@ -3,7 +3,7 @@ import SidebarComponent from '@/components/ui/sidebar/SidebarComponent.vue';
 </script>
 
 <template>
-  <div class="flex divide-x">
+  <div class="flex divide-x overflow-x-hidden">
     <SidebarComponent />
     <div class="p-4 grow">
       <RouterView />

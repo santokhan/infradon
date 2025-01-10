@@ -2,24 +2,22 @@
 // @ts-nocheck
 import { ref } from 'vue';
 import PouchDB from 'pouchdb-browser';
-import blobToUrl from '@/utils/blob-to-url';
-import toBlob from '@/utils/to-blob';
 
-const name = ref('');
-const content = ref('');
-const image = ref<File | null>(null);
-const emit = defineEmits(['close'])
 const props = defineProps({
-  collection_name: {
-    type: String,
+  doc: {
+    type: Object,
     required: true
   }
 })
+const name = ref(props.doc.name||'');
+const content = ref(props.doc.content||'');
+const image = ref<File | null>(null);
+const emit = defineEmits(['close'])
 
 const doSubmit = async (e) => {
   e.preventDefault();
   try {
-    const db = new PouchDB(props.collection_name || 'mydb')
+    const db = new PouchDB('mydb')
 
     const newDoc = {
       _id: crypto.randomUUID(),
@@ -42,7 +40,7 @@ const doSubmit = async (e) => {
   }
 };
 
-const onImageChange = (event: Event) => {
+const handleImageChange = (event: Event) => {
   const input = event.target as HTMLInputElement;
   if (input.files?.length) {
     image.value = input.files[0];
@@ -84,14 +82,19 @@ const onImageChange = (event: Event) => {
 
       <div class="flex flex-col gap-1">
         <label for="image">Image:</label>
-        <input type="file" id="image" @change="onImageChange" accept="image/*" class="default" />
+        <input type="file" id="image" @change="handleImageChange" accept="image/*" class="default" />
       </div>
 
       <template v-if="image">
         <div class="flex flex-col gap-1">
           <label for="image">Preview:</label>
-          <img v-if="image" :src="blobToUrl({ image: toBlob({ file: image }) })" alt="Preview"
-            class="size-28 rounded-xl border" />
+          <img v-if="image" :src="URL.createObjectURL(image)" alt="Preview" />
+        </div>
+      </template>
+      <template v-else>
+        <div class="flex flex-col gap-1">
+          <label for="image">Preview:</label>
+          <img v-if="doc.image" :src="doc.image" alt="Preview" />
         </div>
       </template>
 

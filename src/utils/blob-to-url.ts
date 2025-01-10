@@ -9,7 +9,6 @@ function blobToUrl({ image }: { image: Blob }) {
 
   // // Optionally, if you want to revoke the URL later (for cleanup), you can use:
   // URL.revokeObjectURL(blobUrl);
-  
   return blobUrl
 }
 

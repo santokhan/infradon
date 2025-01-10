@@ -2,5 +2,7 @@
 </script>
 
 <template>
-    <RouterView />
+    <div class="w-full min-w-[768px] overflow-x-auto">
+        <RouterView />
+    </div>
 </template>
