@@ -1,46 +1,48 @@
 <script setup lang="ts">
-// @ts-ignore
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-// @ts-ignore
-import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
-import { useRoute } from 'vue-router'; // Import useRoute
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
-// Assuming collection will be passed via route params or default
-const route = useRoute();  // Access the current route
-const dbName = route.params.dbName || "database1";  // Get dbName from route params (default to "database1")
+const props = defineProps<{ db: string[] | string }>()
 
-// Define collections
-function getDocuments(db: string = "database1"): string[] | null {
-  const documents: Record<string, string[]> = {
-    "database1": [
+function getCollections(db: string[] | string): string[] | undefined {
+  if (!db) return;
+
+  const coillections: Record<string, string[]> = {
+    "my_database": [
       "product_collection",
       "blogs_collection",
     ],
-    "my_databse": [
-      "product_collection",
-      "blogs_collection",
+    "my_database2": [
+      "product_collection2",
+      "blogs_collection2",
     ],
   };
 
-  if (typeof db !== 'string' || !(db in documents)) {
-    return null;
+  const db_name = Array.isArray(db) ? db[0] : db
+
+  if (!(db_name in coillections)) {
+    return;
   }
 
-  return documents[db];
+  return coillections[db_name];
 }
+const collections = getCollections(props.db);
+const route = useRoute()
+const collection = ref("");
 
-// Get documents based on the route parameter
-const documents = getDocuments(dbName);
+watch(() => route?.params, () => {
+  const coll = route?.params?.collection
+  collection.value = Array.isArray(coll)? coll[0] : coll
+})
 </script>
 
 <template>
-  <div class="px-4 space-y-2">
-    <template v-for="(db, index) in documents" :key="index">
-      <RouterLink :to="`/${db}`"
-        class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
-        :class="{ 'bg-gray-600': db === dbName }">
-        <FontAwesomeIcon :icon="faCaretRight" />
-        {{ db }}
+  <div class="pl-3 space-y-1">
+    <template v-for="(item, index) in collections" :key="index">
+      <RouterLink :to="`/databases/${props.db}/${item}`"
+        class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-700 focus:outline-none"
+        :class="item == collection ? 'bg-gray-600' : ''">
+        {{ item }}
       </RouterLink>
     </template>
   </div>

@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import SidebarComponent from '@/components/ui/sidebar/SidebarComponent.vue';
 </script>
 
 <template>
-  <div class="flex">
-    <SidebarComponent />
-    <div class="p-4"></div>
+  <div class="flex flex-col justify-center items-center gap-8 px-4 py-12">
+    <h1 class="text-3xl font-bold">Home page</h1>
+    <div>
+      <RouterLink to="/databases" class="bg-black text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-800">
+        Open Databases
+      </RouterLink>
+    </div>
   </div>
 </template>
