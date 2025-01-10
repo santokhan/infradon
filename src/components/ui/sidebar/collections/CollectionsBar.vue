@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 
 const props = defineProps<{ db: string[] | string }>()
@@ -30,10 +30,13 @@ const collections = getCollections(props.db);
 const route = useRoute()
 const collection = ref("");
 
-watch(() => route?.params, () => {
+function assignCollection() {
   const coll = route?.params?.collection
-  collection.value = Array.isArray(coll)? coll[0] : coll
-})
+  collection.value = Array.isArray(coll) ? coll[0] : coll
+}
+watchEffect(assignCollection)
+watchEffect(() => { console.log(window.location) })
+watch(() => route.params, assignCollection)
 </script>
 
 <template>

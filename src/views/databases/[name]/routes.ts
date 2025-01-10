@@ -1,4 +1,4 @@
-import collection_route from './[collection]/routes';
+import routes_collection from './[collection]/routes';
 
 export default {
   path: ':database',
@@ -9,6 +9,6 @@ export default {
       name: 'database-index',
       component: () => import('./ViewDB.vue'),
     },
-    collection_route
+    routes_collection
   ],
 }

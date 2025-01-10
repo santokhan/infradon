@@ -4,17 +4,19 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 // @ts-ignore
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import CollectionsBar from './collections/CollectionsBar.vue';
-import { ref, watch } from 'vue';
+import { ref, watch, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 
 const databases: string[] = ["my_database", "my_database2"];
 const expand = ref("")
 const route = useRoute()
 
-watch(() => route.params, () => {
+function assignExpand() {
   const database = route?.params?.database
   expand.value = Array.isArray(database) ? database[0] : database
-})
+}
+watchEffect(assignExpand)
+watch(() => route.params, assignExpand)
 </script>
 
 <template>

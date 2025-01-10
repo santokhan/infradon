@@ -1,4 +1,4 @@
-import database_route from './[name]/routes'
+import route_database from './[name]/routes'
 
 export default {
   path: 'databases',
@@ -10,6 +10,6 @@ export default {
       name: 'databases-index',
       component: () => import('./DatabasesView.vue')
     },
-    database_route
+    route_database
   ]
 }

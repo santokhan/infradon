@@ -1,4 +1,4 @@
-import databases from './databases/routes';
+import routes_databases from './databases/routes';
 
 export default [
   {
@@ -10,7 +10,7 @@ export default [
         name: 'index',
         component: () => import('./HomeView.vue'),
       },
-      databases,
+      routes_databases,
       {
         path: 'dataBaseTemplate',
         name: 'dataBaseTemplate',
