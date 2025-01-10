@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import TablePagination from '@/components/tables/collection/TablePagination.vue';
 import useParams from '@/hooks/useParams';
-
-const params = useParams();
-const collection = params.collection;
+import { ref, watch, watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
 
 type Row = {
   id: string;
   name: string;
   content: string;
 };
+
+const route = useRoute();
+const collection = ref()
+const documents = ref<Row[] | null>([]);
 
 // Simulating a database call
 function getDocuments(db: string | string[]): Row[] | null {
@@ -28,14 +31,26 @@ function getDocuments(db: string | string[]): Row[] | null {
   return documents[db];
 }
 
-const documents = getDocuments(collection);
+function assignDocuments() {
+  if(!collection.value) return
+  documents.value = getDocuments(collection.value)
+}
+
+function assignCollection() {
+  const coll = route?.params?.collection
+  collection.value = Array.isArray(coll) ? coll[0] : coll
+  assignDocuments()
+}
+
+watchEffect(assignCollection)
+watch(() => route.params, assignCollection)
 </script>
 
 <template>
   <div>
     <div class="flex">
-      <div class="bg-white rounded-t-lg px-4 py-2">
-        <span class="font-semibold text-lg">{{ params.collection }}</span>
+      <div class="bg-white rounded-t-lg px-3 py-1">
+        <span class="font-semibold text-lg">{{ collection }}</span>
       </div>
     </div>
 

@@ -215,6 +215,3 @@ class DatabaseService {
 export function createDatabaseService(remoteURL: string, localURL: string) {
   return new DatabaseService(remoteURL, localURL)
 }
-
-// Export une instance unique du service
-//export const databaseService = new DatabaseService();

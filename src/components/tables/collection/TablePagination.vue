@@ -50,8 +50,8 @@ watch(() => route.query, assingActivePage)
       <template v-for="(page, index) in pages" :key="index">
         <button @click="() => {
           router.push({ query: { page: page.toString() } })
-        }" class="px-4 py-2 bg-gray-200 text-sm rounded-lg hover:bg-gray-300"
-          :class="page == activePage ? 'bg-gray-400' : ''">{{ page }}</button>
+        }" class="px-4 py-2 bg-gray-200 text-sm rounded-lg"
+          :class="page == activePage ? 'bg-blue-500 text-white' : 'hover:bg-gray-300'">{{ page }}</button>
       </template>
       <button @click="() => {
         if (activePage < pages.length) {

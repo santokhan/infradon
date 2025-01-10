@@ -42,7 +42,7 @@ watch(() => route.params, assignCollection)
   <div class="pl-3 space-y-1">
     <template v-for="(item, index) in collections" :key="index">
       <RouterLink :to="`/databases/${props.db}/${item}`"
-        class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-700 focus:outline-none"
+        class="flex items-center gap-2 px-3 py-1.5 rounded-md hover:bg-gray-700 focus:outline-none"
         :class="item == collection ? 'bg-gray-600' : ''">
         {{ item }}
       </RouterLink>
