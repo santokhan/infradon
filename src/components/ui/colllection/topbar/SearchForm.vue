@@ -1,28 +1,37 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
+import PouchDB from 'pouchdb'
+import PouchFind from 'pouchdb-find'
 
 const q = ref('')
 const props = defineProps({
   assignDocuments: {
-    type: Function,
+    type: Function
     // required: true
   }
 })
 
+PouchDB.plugin(PouchFind)
+
 async function search(e: Event) {
-  e.preventDefault();
+  e.preventDefault()
 
   console.log(q.value)
 
-  // Step 1 Search data from PouchDB
-  // Step 2 Asssign documents to the table state
-
   try {
-    const db = new PouchDB('http://admin:admin@localhost:5986/post');
+    const db = new PouchDB('product_collection')
+
+    // Ensure the `find` plugin works by creating an index first
+    await db.createIndex({
+      index: { fields: ['name', 'content'] }
+    })
 
     const results = await db.find({
       selector: {
-        title: {
+        name: {
+          $regex: q.value
+        },
+        content: {
           $regex: q.value
         }
       }
@@ -30,8 +39,7 @@ async function search(e: Event) {
 
     console.log(results)
 
-    props.assignDocuments(results.docs)
-
+    // props.assignDocuments(results.docs)
   } catch (error) {
     console.log(error)
   }
