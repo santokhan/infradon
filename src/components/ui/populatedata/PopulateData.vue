@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button type="button" class="primary" @click="populateDatabase('product_collection', 10)">
+    <button type="button" class="primary" @click="populateDatabase('product_collection', 5)">
       Populate
     </button>
   </div>
@@ -18,8 +18,9 @@ async function populateDatabase(dbName: string, numDocuments: number) {
   // Generate an array of documents
   const docs = Array.from({ length: numDocuments }, (_, index) => ({
     _id: `doc_${index + 1}`, // Unique document ID
-    title: `Document Title ${index + 1}`,
-    description: `This is a description for document ${index + 1}.`,
+    image: 'https://placehold.co/150',
+    name: `Document Title ${index + 1}`,
+    content: `This is a description for document ${index + 1}.`,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   }))
