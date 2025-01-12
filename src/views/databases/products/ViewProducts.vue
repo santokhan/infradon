@@ -9,7 +9,6 @@ import SearchForm from '@/components/ui/colllection/topbar/SearchForm.vue'
 import ActionEdit from '@/components/shared/ActionEdit.vue'
 import ActionDelete from '@/components/shared/ActionDelete.vue'
 import EditProduct from '@/components/forms/products/EditProduct.vue'
-import PopulateData from '@/components/ui/populatedata/PopulateData.vue'
 import ActionView from '@/components/shared/ActionView.vue'
 
 const route = useRoute()
@@ -61,13 +60,21 @@ async function removeDocument(doc: Record<string, any>) {
     console.error('Error deleting document:', err)
   }
 }
+
+function searchProducts(rows: any[]) {
+  documents.value = {
+    rows: rows.map((row: any) => {
+      return { doc: row }
+    })
+  }
+}
 </script>
 
 <template>
   <div class="flex items-center justify-start gap-2 rounded-lg">
     <!-- <LimitSelect /> -->
     <!-- <StatusFilter /> -->
-    <SearchForm />
+    <SearchForm :assignDocuments="searchProducts" />
     <!-- <PopulateData /> -->
     <div class="grow"></div>
     <button type="button" v-if="!isAdding" class="primary" @click="isAdding = !isAdding">Add Product</button>
@@ -121,9 +128,7 @@ async function removeDocument(doc: Record<string, any>) {
           <td>{{ item.doc?.created_at }}</td>
           <td>
             <div class="flex gap-2 items-center">
-              <ActionView class="text-blue-500 hover:text-blue-600 mr-2" @click="async () => {
-                router.push({ path: `/databases/${route.params.database}/${route.params.collection}/${item.doc._id}` })
-              }" />
+              <ActionView class="text-blue-500 hover:text-blue-600 mr-2" :id="item.doc?._id" />
               <ActionEdit class="text-blue-500 hover:text-blue-600 mr-2" @click="async () => {
                 collectionToEdit = item.doc
                 isAdding = true

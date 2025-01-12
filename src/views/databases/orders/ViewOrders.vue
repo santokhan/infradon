@@ -71,7 +71,6 @@ function searchOrders(rows: any[]) {
       return { doc: row }
     })
   }
-  console.log(documents.value)
 }
 </script>
 

@@ -58,7 +58,9 @@ async function search(e: Event) {
     });
 
     console.log('Query results:', results);
-    // props.assignDocuments(results.docs); // Uncomment and use as needed
+    if (typeof props.assignDocuments === 'function') {
+      props.assignDocuments(results.docs);
+    }
   } catch (error) {
     console.error('Error occurred during search:', error);
   }
