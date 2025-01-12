@@ -15,7 +15,7 @@ const props = defineProps({
     required: true
   }
 })
-const name = ref(props.doc.name||'');
+const product = ref(props.doc.name||'');
 const content = ref(props.doc.content||'');
 const image = ref<File | null>(null);
 const emit = defineEmits(['close'])
@@ -28,7 +28,7 @@ const doSubmit = async (e) => {
     const db = new PouchDB(props.collection_name)
     const existingDoc = await db.get(props.doc._id);
 
-    existingDoc.name= name.value
+    existingDoc.name= product.value
     existingDoc.content= content.value
     existingDoc.image= image.value
 
@@ -36,7 +36,7 @@ const doSubmit = async (e) => {
     console.log('Document updated', existingDoc);
 
     // Reset form fields
-    name.value = '';
+    product.value = '';
     content.value = '';
     image.value = null;
 

@@ -19,7 +19,11 @@ async function search(e: Event) {
   console.log(q.value)
 
   try {
-    const db = new PouchDB('product_collection')
+    const db = new PouchDB("products_db")
+
+    db.info().then((data) => {
+      console.log(data)
+    })
 
     // Ensure the `find` plugin works by creating an index first
     await db.createIndex({

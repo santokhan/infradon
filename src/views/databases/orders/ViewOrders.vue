@@ -72,7 +72,7 @@ async function removeDocument(doc: Record<string, any>) {
     <PopulateData />
     <div class="grow"></div>
     <button type="button" v-if="!isAdding" class="primary" @click="isAdding = !isAdding">
-      Add Document
+      Create Order
     </button>
     <button type="button" v-else class="primary" @click="() => {
       collectionToEdit = null
