@@ -4,7 +4,7 @@ export default {
   children: [
     {
       path: '',
-      name: 'database-index',
+      name: 'products-index',
       component: () => import('./ViewProducts.vue'),
     },
   ],

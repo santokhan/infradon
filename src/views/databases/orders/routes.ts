@@ -4,7 +4,7 @@ export default {
   children: [
     {
       path: '',
-      name: 'database-index',
+      name: 'orders-index',
       component: () => import('./ViewOrders.vue'),
     },
   ],

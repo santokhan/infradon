@@ -2,14 +2,14 @@
 import TablePagination from '@/components/tables/collection/TablePagination.vue'
 import { ref, watch, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import AddDocument from '@/components/forms/products/AddProduct.vue'
+import AddProduct from '@/components/forms/products/AddProduct.vue'
 import PouchDb from 'pouchdb-browser'
 import blobToUrl from '@/utils/blob-to-url'
 import SearchForm from '@/components/ui/colllection/topbar/SearchForm.vue'
 import ActionEdit from '@/components/shared/ActionEdit.vue'
 import ActionDelete from '@/components/shared/ActionDelete.vue'
 import TableName from '@/components/ui/colllection/TableName.vue'
-import EditDocument from '@/components/forms/products/EditProduct.vue'
+import EditProduct from '@/components/forms/products/EditProduct.vue'
 import PopulateData from '@/components/ui/populatedata/PopulateData.vue'
 import ActionView from '@/components/shared/ActionView.vue'
 
@@ -79,10 +79,10 @@ async function removeDocument(doc: Record<string, any>) {
   </div>
   <template v-if="isAdding">
     <template v-if="collectionToEdit">
-      <EditDocument :doc="collectionToEdit" @close="collectionToEdit = null" :collection_name="database" />
+      <EditProduct :doc="collectionToEdit" @close="collectionToEdit = null" :collection_name="database" />
     </template>
     <template v-else>
-      <AddDocument :collection_name="database" @close="async () => {
+      <AddProduct :collection_name="database" @close="async () => {
         try {
           const result = await assignDocuments()
           if (!result) return
