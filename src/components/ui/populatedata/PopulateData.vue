@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button type="button" class="primary" @click="populateDatabase('product_collection', 5)">
+    <button type="button" class="primary" @click="populateDatabase('products_db', 5)">
       Populate
     </button>
   </div>
