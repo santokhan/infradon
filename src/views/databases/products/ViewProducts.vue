@@ -8,7 +8,6 @@ import blobToUrl from '@/utils/blob-to-url'
 import SearchForm from '@/components/ui/colllection/topbar/SearchForm.vue'
 import ActionEdit from '@/components/shared/ActionEdit.vue'
 import ActionDelete from '@/components/shared/ActionDelete.vue'
-import TableName from '@/components/ui/colllection/TableName.vue'
 import EditProduct from '@/components/forms/products/EditProduct.vue'
 import PopulateData from '@/components/ui/populatedata/PopulateData.vue'
 import ActionView from '@/components/shared/ActionView.vue'
@@ -71,7 +70,7 @@ async function removeDocument(doc: Record<string, any>) {
     <SearchForm />
     <PopulateData />
     <div class="grow"></div>
-    <button type="button" v-if="!isAdding" class="primary" @click="isAdding = !isAdding">Add Document</button>
+    <button type="button" v-if="!isAdding" class="primary" @click="isAdding = !isAdding">Add Product</button>
     <button type="button" v-else class="primary" @click="() => {
       collectionToEdit = null
       isAdding = !isAdding
@@ -96,12 +95,13 @@ async function removeDocument(doc: Record<string, any>) {
 
   <div class="mt-4">
     <div class="flex">
-      <TableName />
+      <div class="bg-white rounded-t-lg px-3 py-1">
+        <span class="font-semibold text-lg">{{ "Products" }}</span>
+      </div>
     </div>
     <table v-if="documents" class="default min-w-full table-auto bg-white rounded-lg">
       <thead>
         <tr class="border-b">
-          <!-- <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">ID</th> -->
           <th>Image</th>
           <th>Name</th>
           <th>Content</th>
@@ -111,7 +111,6 @@ async function removeDocument(doc: Record<string, any>) {
       </thead>
       <tbody>
         <tr v-for="item in documents?.rows" :key="item.id" class="border-b hover:bg-gray-50">
-          <!-- <td>{{ item.doc?._id }}</td> -->
           <td>
             <template v-if="item.doc?.image">
               <img :src="blobToUrl(item.doc)" class="size-20 aspect-square object-cover rounded-xl border" />

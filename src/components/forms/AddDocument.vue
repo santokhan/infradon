@@ -5,7 +5,7 @@ import PouchDB from 'pouchdb-browser';
 import blobToUrl from '@/utils/blob-to-url';
 import toBlob from '@/utils/to-blob';
 
-const name = ref('');
+const product = ref('');
 const content = ref('');
 const image = ref<File | null>(null);
 const emit = defineEmits(['close'])
@@ -23,7 +23,7 @@ const doSubmit = async (e) => {
 
     const newDoc = {
       _id: crypto.randomUUID(),
-      name: name.value,
+      name: product.value,
       content: content.value,
       image: image.value,
     };
@@ -32,7 +32,7 @@ const doSubmit = async (e) => {
     console.log('Document saved', newDoc);
 
     // Reset form fields
-    name.value = '';
+    product.value = '';
     content.value = '';
     image.value = null;
 
