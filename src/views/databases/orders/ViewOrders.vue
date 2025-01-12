@@ -64,54 +64,49 @@ async function removeDocument(doc: Record<string, any>) {
     console.error('Error deleting document:', err)
   }
 }
+
+function searchOrders(rows: any[]) {
+  documents.value = {
+    rows: rows.map(row => {
+      return { doc: row }
+    })
+  }
+  console.log(documents.value)
+}
 </script>
 
 <template>
   <div class="flex items-center justify-start gap-2 rounded-lg">
-    <OrderSearchForm />
+    <OrderSearchForm :assignDocuments="searchOrders" />
     <div class="grow"></div>
     <button type="button" v-if="!isAdding" class="primary" @click="isAdding = !isAdding">
       Create Order
     </button>
-    <button
-      type="button"
-      v-else
-      class="primary"
-      @click="
-        () => {
-          collectionToEdit = null
-          isAdding = !isAdding
-        }
-      "
-    >
+    <button type="button" v-else class="primary" @click="() => {
+      collectionToEdit = null
+      isAdding = !isAdding
+    }
+      ">
       Close Form
     </button>
   </div>
   <template v-if="isAdding">
     <template v-if="collectionToEdit">
-      <EditDocument
-        :doc="collectionToEdit"
-        @close="collectionToEdit = null"
-        :collection_name="database"
-      />
+      <EditDocument :doc="collectionToEdit" @close="collectionToEdit = null" :collection_name="database" />
     </template>
     <template v-else>
-      <AddDocument
-        :collection_name="database"
-        @close="
-          async () => {
-            try {
-              const result = await assignDocuments()
+      <AddDocument :collection_name="database" @close="async () => {
+        try {
+          const result = await assignDocuments()
 
-              if (!result) return
+          if (!result) return
 
-              isAdding = false
-            } catch (error) {
-              console.log(error)
-            }
-          }
-        "
-      />
+          isAdding = false
+        } catch (error) {
+          console.log(error)
+        }
+      }
+        " />
     </template>
   </template>
 
@@ -144,16 +139,12 @@ async function removeDocument(doc: Record<string, any>) {
           <td>{{ item.doc?.created_at }}</td>
           <td>
             <div class="flex gap-2 items-center">
-              <ActionView :id="item.doc._id" class="text-blue-500 hover:text-blue-600 mr-2" />
-              <ActionDelete
-                class="text-red-500 hover:text-red-600"
-                @click="
-                  async () => {
-                    removeDocument(item.doc)
-                    assignDocuments()
-                  }
-                "
-              />
+              <ActionView :id="item.doc?._id" class="text-blue-500 hover:text-blue-600 mr-2" />
+              <ActionDelete class="text-red-500 hover:text-red-600" @click="async () => {
+                removeDocument(item.doc)
+                assignDocuments()
+              }
+                " />
             </div>
           </td>
         </tr>

@@ -7,7 +7,6 @@ const q = ref('')
 const props = defineProps({
   assignDocuments: {
     type: Function
-    // required: true
   }
 })
 
@@ -52,6 +51,9 @@ async function search(e: Event) {
     })
 
     console.log('Query results:', results)
+    if(typeof props.assignDocuments === 'function'){
+      props.assignDocuments(results.docs)
+    }
   } catch (error) {
     console.error('Error occurred during search:', error)
   }
