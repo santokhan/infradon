@@ -68,7 +68,7 @@ async function removeDocument(doc: Record<string, any>) {
     <!-- <LimitSelect /> -->
     <!-- <StatusFilter /> -->
     <SearchForm />
-    <PopulateData />
+    <!-- <PopulateData /> -->
     <div class="grow"></div>
     <button type="button" v-if="!isAdding" class="primary" @click="isAdding = !isAdding">Add Product</button>
     <button type="button" v-else class="primary" @click="() => {

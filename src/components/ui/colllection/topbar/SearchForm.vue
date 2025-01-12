@@ -11,36 +11,43 @@ const props = defineProps({
   }
 })
 
+let db: any;  // A global variable to store the db instance
+const dbName = 'products_db';
 
+// Function to initialize the database
+async function initializeDatabase() {
+  // Only initialize the database once
+  if (!db) {
+    const FindDB = PouchDB.plugin(PouchFind);
+    db = new FindDB(dbName);
+
+    try {
+      // Here we assume the index for 'name' and 'content' already exists
+      console.log('Database initialized');
+    } catch (error) {
+      console.error('Error initializing database:', error);
+    }
+  }
+}
+
+// Search function to query the database
 async function search(e: Event) {
-  e.preventDefault()
+  e.preventDefault();
 
-  const searchValue = q.value.trim()
+  const searchValue = q.value.trim();
   if (!searchValue) {
-    console.error('Search query is empty')
-    return
+    console.error('Search query is empty');
+    return;
   }
 
   try {
-    PouchDB.plugin(PouchFind);
-
-    const db = new PouchDB('products_db');
-
-    // Log database info
-    const info = await db.info();
-
-    // Create index on name and content fields
-    await db.createIndex({
-      index: { fields: ['name', 'content'] }
-    });
-
-    // Log indexes
-    const indexes = await db.getIndexes();
+    // Initialize the database (ensure it's initialized once)
+    await initializeDatabase();
 
     // Sanitize the input for regex (escape special characters)
     const sanitizedValue = searchValue.replace(/[.*+?^${}()|[\]\\]/ig, '\\$&');
 
-    // Query the database with case-insensitive regex
+    // Perform the query with case-insensitive regex
     const results = await db.find({
       selector: {
         $or: [
@@ -50,10 +57,10 @@ async function search(e: Event) {
       }
     });
 
-    console.log('Query results:', results)
+    console.log('Query results:', results);
     // props.assignDocuments(results.docs); // Uncomment and use as needed
   } catch (error) {
-    console.error('Error occurred:', error)
+    console.error('Error occurred during search:', error);
   }
 }
 </script>
