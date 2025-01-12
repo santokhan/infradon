@@ -26,6 +26,7 @@ const doSubmit = async (e) => {
       name: name.value,
       content: content.value,
       image: image.value,
+      created_at: new Date().toISOString()
     };
 
     await db.put(newDoc);

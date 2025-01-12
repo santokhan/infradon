@@ -4,14 +4,13 @@ import { ref, watch, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AddDocument from '@/components/forms/orders/CreateOrder.vue'
 import PouchDb from 'pouchdb-browser'
-import blobToUrl from '@/utils/blob-to-url'
 import SearchForm from '@/components/ui/colllection/topbar/SearchForm.vue'
 import ActionEdit from '@/components/shared/ActionEdit.vue'
 import ActionDelete from '@/components/shared/ActionDelete.vue'
-import TableName from '@/components/ui/colllection/TableName.vue'
 import EditDocument from '@/components/forms/orders/EditOrder.vue'
 import PopulateData from '@/components/ui/populatedata/PopulateData.vue'
 import ActionView from '@/components/shared/ActionView.vue'
+import ProductPreview from '@/components/ui/orders/ProductPreview.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -66,10 +65,7 @@ async function removeDocument(doc: Record<string, any>) {
 
 <template>
   <div class="flex items-center justify-start gap-2 rounded-lg">
-    <!-- <LimitSelect /> -->
-    <!-- <StatusFilter /> -->
     <SearchForm />
-    <PopulateData />
     <div class="grow"></div>
     <button type="button" v-if="!isAdding" class="primary" @click="isAdding = !isAdding">
       Create Order
@@ -100,36 +96,34 @@ async function removeDocument(doc: Record<string, any>) {
 
   <div class="mt-4">
     <div class="flex">
-      <TableName />
+      <div class="bg-white rounded-t-lg px-3 py-1">
+        <span class="font-semibold text-lg">{{ 'Orders' }}</span>
+      </div>
     </div>
 
     <table v-if="documents" class="default min-w-full table-auto bg-white rounded-lg">
       <thead>
         <tr class="border-b">
-          <!-- <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">ID</th> -->
-          <th>Image</th>
-          <th>Name</th>
-          <th>Content</th>
+          <th>Product</th>
+          <th>Street Address</th>
+          <th>City</th>
+          <th>Country</th>
           <th>Created At</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in documents?.rows" :key="item.id" class="border-b hover:bg-gray-50">
-          <!-- <td>{{ item.doc?._id }}</td> -->
           <td>
-            <template v-if="item.doc?.image">
-              <img :src="blobToUrl(item.doc)" class="size-20 aspect-square object-cover rounded-xl border" />
-            </template>
+            <ProductPreview :product_id="item.doc?.product_id" />
           </td>
-          <td>{{ item.doc?.name }}</td>
-          <td>{{ item.doc?.content }}</td>
+          <td>{{ item.doc?.street_address }}</td>
+          <td>{{ item.doc?.city }}</td>
+          <td>{{ item.doc?.country }}</td>
           <td>{{ item.doc?.created_at }}</td>
           <td>
             <div class="flex gap-2 items-center">
-              <ActionView class="text-blue-500 hover:text-blue-600 mr-2" @click="async () => {
-                router.push({ path: `/databases/${route.params.database}/${route.params.collection}/${item.doc._id}` })
-              }" />
+              <ActionView :id="item.doc._id" class="text-blue-500 hover:text-blue-600 mr-2" />
               <ActionEdit class="text-blue-500 hover:text-blue-600 mr-2" @click="async () => {
                 collectionToEdit = item.doc
                 isAdding = true

@@ -62,7 +62,8 @@ const doSubmit = async (e: Event) => {
       product_id: product_id.value,
       street_address: street_address.value,
       city: city.value,
-      country: country.value
+      country: country.value,
+      created_at: new Date().toISOString()
     }
     await db.put(newDoc)
 
