@@ -124,10 +124,6 @@ async function removeDocument(doc: Record<string, any>) {
           <td>
             <div class="flex gap-2 items-center">
               <ActionView :id="item.doc._id" class="text-blue-500 hover:text-blue-600 mr-2" />
-              <ActionEdit class="text-blue-500 hover:text-blue-600 mr-2" @click="async () => {
-                collectionToEdit = item.doc
-                isAdding = true
-              }" />
               <ActionDelete class="text-red-500 hover:text-red-600" @click="async () => {
                 removeDocument(item.doc)
                 assignDocuments()
