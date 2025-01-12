@@ -20,7 +20,6 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['pouchdb-browser'], // Ensure PouchDB is pre-bundled
+    include: ['pouchdb-browser', 'pouchdb-find'], // Ensure PouchDB is pre-bundled
   },
-
 })

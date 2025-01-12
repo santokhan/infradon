@@ -2,20 +2,20 @@
 import TablePagination from '@/components/tables/collection/TablePagination.vue'
 import { ref, watch, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import AddDocument from '@/components/forms/AddDocument.vue'
+import AddDocument from '@/components/forms/orders/CreateOrder.vue'
 import PouchDb from 'pouchdb-browser'
 import blobToUrl from '@/utils/blob-to-url'
 import SearchForm from '@/components/ui/colllection/topbar/SearchForm.vue'
 import ActionEdit from '@/components/shared/ActionEdit.vue'
 import ActionDelete from '@/components/shared/ActionDelete.vue'
 import TableName from '@/components/ui/colllection/TableName.vue'
-import EditDocument from '@/components/forms/EditDocument.vue'
+import EditDocument from '@/components/forms/orders/EditOrder.vue'
 import PopulateData from '@/components/ui/populatedata/PopulateData.vue'
 import ActionView from '@/components/shared/ActionView.vue'
 
 const route = useRoute()
 const router = useRouter()
-const database = ref<string>('')
+const database = ref<string>('orders_db')
 const documents = ref<any>({})
 
 async function assignDocuments() {
@@ -34,18 +34,11 @@ async function assignDocuments() {
   }
 }
 
-function assignDB() {
-  const coll = route?.params?.database
-  database.value = Array.isArray(coll) ? coll[0] : coll
-}
-
 watchEffect(async () => {
-  assignDB()
   await assignDocuments()
 })
 
 watch(() => route.params, async () => {
-  assignDB()
   await assignDocuments()
 })
 

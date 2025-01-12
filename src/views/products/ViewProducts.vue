@@ -2,20 +2,20 @@
 import TablePagination from '@/components/tables/collection/TablePagination.vue'
 import { ref, watch, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import AddDocument from '@/components/forms/AddDocument.vue'
+import AddDocument from '@/components/forms/products/AddProduct.vue'
 import PouchDb from 'pouchdb-browser'
 import blobToUrl from '@/utils/blob-to-url'
 import SearchForm from '@/components/ui/colllection/topbar/SearchForm.vue'
 import ActionEdit from '@/components/shared/ActionEdit.vue'
 import ActionDelete from '@/components/shared/ActionDelete.vue'
 import TableName from '@/components/ui/colllection/TableName.vue'
-import EditDocument from '@/components/forms/EditDocument.vue'
+import EditDocument from '@/components/forms/products/EditProduct.vue'
 import PopulateData from '@/components/ui/populatedata/PopulateData.vue'
 import ActionView from '@/components/shared/ActionView.vue'
 
 const route = useRoute()
 const router = useRouter()
-const database = ref<string>('')
+const database = ref<string>('products_db')
 const documents = ref<any>({})
 
 async function assignDocuments() {
@@ -34,18 +34,11 @@ async function assignDocuments() {
   }
 }
 
-function assignDB() {
-  const coll = route?.params?.database
-  database.value = Array.isArray(coll) ? coll[0] : coll
-}
-
 watchEffect(async () => {
-  assignDB()
   await assignDocuments()
 })
 
 watch(() => route.params, async () => {
-  assignDB()
   await assignDocuments()
 })
 
@@ -78,9 +71,7 @@ async function removeDocument(doc: Record<string, any>) {
     <SearchForm />
     <PopulateData />
     <div class="grow"></div>
-    <button type="button" v-if="!isAdding" class="primary" @click="isAdding = !isAdding">
-      Add Document
-    </button>
+    <button type="button" v-if="!isAdding" class="primary" @click="isAdding = !isAdding">Add Document</button>
     <button type="button" v-else class="primary" @click="() => {
       collectionToEdit = null
       isAdding = !isAdding
@@ -94,9 +85,7 @@ async function removeDocument(doc: Record<string, any>) {
       <AddDocument :collection_name="database" @close="async () => {
         try {
           const result = await assignDocuments()
-
           if (!result) return
-
           isAdding = false
         } catch (error) {
           console.log(error)
@@ -109,7 +98,6 @@ async function removeDocument(doc: Record<string, any>) {
     <div class="flex">
       <TableName />
     </div>
-
     <table v-if="documents" class="default min-w-full table-auto bg-white rounded-lg">
       <thead>
         <tr class="border-b">
