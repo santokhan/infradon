@@ -20,8 +20,9 @@ const doSubmit = async (e) => {
   e.preventDefault();
   try {
     const db = new PouchDB(props.collection_name)
-
+    
     const newDoc = {
+      _id: crypto.randomUUID(),
       name: name.value,
       content: content.value,
       image: image.value,
