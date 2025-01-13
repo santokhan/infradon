@@ -1,19 +1,16 @@
 <script setup lang="ts">
 import TablePagination from '@/components/tables/collection/TablePagination.vue'
 import { ref, watch, watchEffect } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import AddDocument from '@/components/forms/orders/CreateOrder.vue'
 import PouchDb from 'pouchdb-browser'
-import ActionEdit from '@/components/shared/ActionEdit.vue'
 import ActionDelete from '@/components/shared/ActionDelete.vue'
 import EditDocument from '@/components/forms/orders/EditOrder.vue'
-import PopulateData from '@/components/ui/populatedata/PopulateData.vue'
 import ActionView from '@/components/shared/ActionView.vue'
 import ProductPreview from '@/components/ui/orders/ProductPreview.vue'
 import OrderSearchForm from '@/components/ui/colllection/topbar/OrderSearchForm.vue'
 
 const route = useRoute()
-const router = useRouter()
 const database = ref<string>('orders_db')
 const documents = ref<any>({})
 
