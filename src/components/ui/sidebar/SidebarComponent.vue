@@ -1,18 +1,8 @@
 <script setup lang="ts">
-import CollectionsBar from './collections/CollectionsBar.vue';
-import { ref, watch, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 
 const databases: string[] = ["products", "orders"];
-const expand = ref("")
 const route = useRoute()
-
-function assignExpand() {
-  const database = route?.params?.database
-  expand.value = Array.isArray(database) ? database[0] : database
-}
-watchEffect(assignExpand)
-watch(() => route.params, assignExpand)
 </script>
 
 <template>
@@ -22,10 +12,9 @@ watch(() => route.params, assignExpand)
       <template v-for="(item, index) in databases" :key="index">
         <RouterLink :to="`/databases/${item}`"
           class="flex items-center gap-2 px-3 py-1.5 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700 capitalize"
-          :class="{ 'bg-gray-600': expand == item }" @click="() => expand = expand ? '' : item">
+          :class="{ 'bg-gray-600': route.path.endsWith(item) }">
           {{ item }}
         </RouterLink>
-        <CollectionsBar :db="expand" v-if="expand == item" />
       </template>
     </nav>
   </aside>
