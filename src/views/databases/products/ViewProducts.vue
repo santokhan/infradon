@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import TablePagination from '@/components/tables/collection/TablePagination.vue'
 import { ref, watch, watchEffect } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import AddProduct from '@/components/forms/products/AddProduct.vue'
 import PouchDb from 'pouchdb-browser'
 import blobToUrl from '@/utils/blob-to-url'
@@ -12,7 +12,6 @@ import EditProduct from '@/components/forms/products/EditProduct.vue'
 import ActionView from '@/components/shared/ActionView.vue'
 
 const route = useRoute()
-const router = useRouter()
 const database = ref<string>('products_db')
 const documents = ref<any>({})
 
@@ -128,7 +127,6 @@ function searchProducts(rows: any[]) {
           <td>{{ item.doc?.created_at }}</td>
           <td>
             <div class="flex gap-2 items-center">
-              <ActionView class="text-blue-500 hover:text-blue-600 mr-2" :id="item.doc?._id" />
               <ActionEdit class="text-blue-500 hover:text-blue-600 mr-2" @click="async () => {
                 collectionToEdit = item.doc
                 isAdding = true

@@ -8,20 +8,32 @@ import { remote_db_url } from './utils/api';
 const dbs = { products_db: "products_db", orders_db: "orders_db" };
 const db = new PouchDb(dbs.products_db);
 
-let syncHandler: PouchDB.Replication.Sync<any> | null = null;
+let syncHandlerProductsDB: PouchDB.Replication.Sync<any> | null = null;
+let syncHandlerOrdersDB: PouchDB.Replication.Sync<any> | null = null;
 
 const startSync = async () => {
-  if (!syncHandler) {
-    syncHandler = db.sync(remote_db_url(dbs.orders_db), { live: true, retry: true });
-    console.log('Sync started.');
+  if (!syncHandlerProductsDB) {
+    syncHandlerProductsDB = db.sync(remote_db_url(dbs.products_db), { live: true, retry: true });
+    console.log('Sync started products_db.');
+  }
+  if (!syncHandlerOrdersDB) {
+    syncHandlerOrdersDB = db.sync(remote_db_url(dbs.orders_db), { live: true, retry: true });
+    console.log('Sync started orders_db.');
   }
 };
 
 const stopSync = async () => {
-  if (syncHandler) {
-    syncHandler.cancel();
-    syncHandler = null;
-    console.log('Sync stopped.');
+  if (syncHandlerProductsDB) {
+    syncHandlerProductsDB.cancel();
+    syncHandlerProductsDB = null;
+
+    console.log('Sync stopped products_db.');
+  }
+  if (syncHandlerOrdersDB) {
+    syncHandlerOrdersDB.cancel();
+    syncHandlerOrdersDB = null;
+
+    console.log('Sync stopped orders_db.');
   }
 };
 
