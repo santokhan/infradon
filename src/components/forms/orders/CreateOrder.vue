@@ -27,9 +27,6 @@ const country = ref<string>('')
 const emit = defineEmits<{
   (e: 'close'): void
 }>()
-const props = defineProps<{
-  collection_name: string
-}>()
 
 const cities: City[] = [
   { name: 'New York', country: 'US' },
@@ -48,7 +45,6 @@ const countries: Country[] = [
   { country_code: 'DE', name: 'Germany' },
   { country_code: 'JP', name: 'Japan' },
   { country_code: 'AU', name: 'Australia' },
-  { country_code: 'IN', name: 'India' }
 ]
 
 const filteredCities = computed(() => cities.filter((c) => c.country === country.value))
