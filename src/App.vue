@@ -6,18 +6,19 @@ import PouchDb from 'pouchdb-browser';
 import { remote_db_url } from './utils/api';
 
 const dbs = { products_db: "products_db", orders_db: "orders_db" };
-const db = new PouchDb(dbs.products_db);
+const products_db = new PouchDb(dbs.products_db);
+const orders_db = new PouchDb(dbs.orders_db);
 
 let syncHandlerProductsDB: PouchDB.Replication.Sync<any> | null = null;
 let syncHandlerOrdersDB: PouchDB.Replication.Sync<any> | null = null;
 
 const startSync = async () => {
   if (!syncHandlerProductsDB) {
-    syncHandlerProductsDB = db.sync(remote_db_url(dbs.products_db), { live: true, retry: true });
+    syncHandlerProductsDB = products_db.sync(remote_db_url(dbs.products_db), { live: true, retry: true });
     console.log('Sync started products_db.');
   }
   if (!syncHandlerOrdersDB) {
-    syncHandlerOrdersDB = db.sync(remote_db_url(dbs.orders_db), { live: true, retry: true });
+    syncHandlerOrdersDB = orders_db.sync(remote_db_url(dbs.orders_db), { live: true, retry: true });
     console.log('Sync started orders_db.');
   }
 };
